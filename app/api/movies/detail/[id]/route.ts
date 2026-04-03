@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getMovieDetail, getPosterUrl, getBackdropUrl } from "@/lib/tmdb";
 import { getNollywoodMovieById } from "@/lib/supabase";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(
   req: NextRequest,
   { params }: { params: { id: string } }

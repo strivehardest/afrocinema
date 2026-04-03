@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getNollywoodMovies, nollywoodToMovieCard } from "@/lib/supabase";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const genre = searchParams.get("genre") ?? undefined;
