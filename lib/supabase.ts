@@ -1,10 +1,14 @@
 import { createClient } from "@supabase/supabase-js";
 import type { NollywoodMovie, MovieCard } from "@/types/movie";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+function getSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error("Supabase environment variables are not set");
+  }
+  return createClient(supabaseUrl, supabaseAnonKey);
+}
 
 // ─── Fetch Nollywood Movies ───────────────────────────────────────────────────
 export async function getNollywoodMovies(options?: {
@@ -17,7 +21,7 @@ export async function getNollywoodMovies(options?: {
   const from = (page - 1) * limit;
   const to = from + limit - 1;
 
-  let query = supabase
+  let query = getSupabaseClient()
     .from("nollywood_movies")
     .select("*", { count: "exact" })
     .order(sortBy, { ascending: false })
@@ -38,7 +42,7 @@ export async function getNollywoodMovies(options?: {
 export async function getNollywoodMovieById(
   id: string
 ): Promise<NollywoodMovie | null> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabaseClient()
     .from("nollywood_movies")
     .select("*")
     .eq("id", id)
@@ -50,7 +54,7 @@ export async function getNollywoodMovieById(
 
 // ─── Search Nollywood ─────────────────────────────────────────────────────────
 export async function searchNollywood(query: string): Promise<NollywoodMovie[]> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabaseClient()
     .from("nollywood_movies")
     .select("*")
     .ilike("title", `%${query}%`)

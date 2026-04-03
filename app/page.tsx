@@ -7,6 +7,8 @@ import {
   tmdbToMovieCard,
 } from "@/lib/tmdb";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const [hollywoodData, bollywoodData] = await Promise.all([
     getTrendingHollywood(1),

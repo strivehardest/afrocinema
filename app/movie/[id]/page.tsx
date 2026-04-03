@@ -16,6 +16,8 @@ import { getNollywoodMovieById } from "@/lib/supabase";
 import { TrailerPlayer } from "@/components/movie/TrailerPlayer";
 import { formatRating, formatRuntime, getYouTubeId } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
+
 interface PageProps {
   params: { id: string };
   searchParams: { source?: string; industry?: string };

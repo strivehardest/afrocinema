@@ -10,6 +10,8 @@ interface PageProps {
   searchParams: { genre?: string; page?: string };
 }
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Bollywood Movies",
   description: "Browse trending and popular Bollywood movies.",
