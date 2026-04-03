@@ -19,9 +19,17 @@ export const metadata = {
 
 export default async function BollywoodPage({ searchParams }: PageProps) {
   const page = Number(searchParams.page ?? 1);
-  const data = await getTrendingBollywood(page);
-  const movies = data.results.map((m) => tmdbToMovieCard(m, "bollywood"));
-  const totalPages = data.total_pages;
+
+  let movies: ReturnType<typeof tmdbToMovieCard>[] = [];
+  let totalPages = 1;
+
+  try {
+    const data = await getTrendingBollywood(page);
+    movies = data.results.map((m) => tmdbToMovieCard(m, "bollywood"));
+    totalPages = data.total_pages;
+  } catch (e) {
+    console.error("[BollywoodPage] Failed to fetch movies:", e);
+  }
 
   return (
     <div className="mx-auto max-w-7xl space-y-8 px-4 py-10 sm:px-6 lg:px-8">

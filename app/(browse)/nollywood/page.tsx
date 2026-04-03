@@ -23,9 +23,32 @@ export default async function NollywoodPage({ searchParams }: Props) {
   const page = Number(searchParams.page ?? 1);
   const limit = 20;
 
-  const { data, count } = await getNollywoodMovies({ genre, page, limit, sortBy: "rating" });
-  const movies = data.map(nollywoodToMovieCard);
-  const totalPages = Math.ceil(count / limit);
+  let movies: ReturnType<typeof nollywoodToMovieCard>[] = [];
+  let count = 0;
+  let totalPages = 0;
+  let error = false;
+
+  try {
+    const result = await getNollywoodMovies({ genre, page, limit, sortBy: "rating" });
+    movies = result.data.map(nollywoodToMovieCard);
+    count = result.count;
+    totalPages = Math.ceil(count / limit);
+  } catch (e) {
+    console.error("[NollywoodPage] Failed to fetch movies:", e);
+    error = true;
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+        <SectionHeader title="Nollywood" />
+        <div className="text-center py-24 text-muted-foreground">
+          <p className="text-lg mb-2">Unable to load movies right now.</p>
+          <p className="text-sm">Please try again later.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
